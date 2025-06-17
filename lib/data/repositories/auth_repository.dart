@@ -67,10 +67,20 @@ class AuthRepository {
   }
 
 
+  Future<void> resetPassword(String email) async {
+    await _firebaseAuth.sendPasswordResetEmail(email: email);
+  }
+
+
 
   // function to log out a user that was previously logged in
   Future<void> signOut() async {
     await _firebaseAuth.signOut();
+  }
+
+
+  User? getCurrentUser() {
+    return _firebaseAuth.currentUser;
   }
 
 }
