@@ -4,12 +4,12 @@
 ---
 
 ## LEGEND
-DEVICE = ESP32 sauna control board
-APP = mobile app (owner)
-BROKER = HTTPS Cloud Function (runs as service account)
-AUTH = Firebase Auth (issues ID/refresh tokens)
-FS = Firestore (device registry, schedules, state, telemetry)
-NVS = non-volatile storage (a library and system that stores small amounts of data, such as configuration settings, directly into the ESP32's flash memory, allowing the data to persist even after the device loses power or restarts)
+DEVICE = ESP32 sauna control board  
+APP = mobile app (owner)  
+BROKER = HTTPS Cloud Function (runs as service account)  
+AUTH = Firebase Auth (issues ID/refresh tokens)  
+FS = Firestore (device registry, schedules, state, telemetry)  
+NVS = non-volatile storage (a library and system that stores small amounts of data, such as configuration settings, directly into the ESP32's flash memory, allowing the data to persist even after the device loses power or restarts)  
 
 ## 0) Data model — what is saved where
 
