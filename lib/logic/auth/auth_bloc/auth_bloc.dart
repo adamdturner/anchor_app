@@ -15,6 +15,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
     on<AuthStartedInitialCheck>(_onInitialCheck);
     on<AuthSignUpRequested>(_onSignUpRequested);
     on<AuthSignInRequested>(_onSignInRequested);
+    on<AuthResetPasswordRequested>(_onResetPasswordRequested);
     on<AuthSignOutRequested>(_onSignOutRequested);
 
     _authSubscription = FirebaseAuth.instance.authStateChanges().listen((user) {
@@ -49,6 +50,7 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
         role: event.role,
         firstName: event.firstName,
         lastName: event.lastName,
+        phoneNumber: event.phoneNumber,
       );
       // No emit — wait for authStateChanges
     } on FirebaseAuthException catch (e) {
@@ -77,6 +79,18 @@ class AuthBloc extends HydratedBloc<AuthEvent, AuthState> {
       emit(AuthFailure(error: e.message ?? 'Sign-in failed'));
     } catch (e) {
       emit(AuthFailure(error: e.toString()));
+    }
+  }
+
+  Future<void> _onResetPasswordRequested(AuthResetPasswordRequested event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
+    try {
+      await _authRepository.resetPassword(event.email);
+      emit(AuthUnauthenticated()); // Return to unauthenticated state after reset
+    } on FirebaseAuthException catch (e) {
+      emit(AuthFailure(error: e.message ?? 'Password reset failed'));
+    } catch (e) {
+      emit(AuthFailure(error: 'Unexpected error: $e'));
     }
   }
 

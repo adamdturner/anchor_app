@@ -17,6 +17,7 @@ class AuthSignUpRequested extends AuthEvent {
   final String role;
   final String firstName;
   final String lastName;
+  final String? phoneNumber;
 
   AuthSignUpRequested({
     required this.email,
@@ -24,6 +25,7 @@ class AuthSignUpRequested extends AuthEvent {
     required this.role,
     required this.firstName,
     required this.lastName,
+    this.phoneNumber,
   });
 }
 
@@ -34,6 +36,10 @@ class AuthSignInRequested extends AuthEvent {
   AuthSignInRequested({required this.email, required this.password});
 }
 
-class AuthResetPasswordRequested extends AuthEvent {}
+class AuthResetPasswordRequested extends AuthEvent {
+  final String email;
+
+  AuthResetPasswordRequested({required this.email});
+}
 
 class AuthSignOutRequested extends AuthEvent {}

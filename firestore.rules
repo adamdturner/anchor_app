@@ -2,8 +2,73 @@ rules_version = '2';
 
 service cloud.firestore {
   match /databases/{database}/documents {
+    
+    // ===== PRODUCTION RULES (SECURE) =====
+    // Uncomment the rules below for production use
+    
+    // Allow anyone to read/write to user index collection (for signup/login)
+    // match /users-index/{userId} {
+    //   allow read, write: if true;
+    // }
+    
+    // Allow users to read/write their own admin data
+    // match /users-admin/{userId} {
+    //   allow read, write: if request.auth != null && request.auth.uid == userId;
+    // }
+    
+    // Allow users to read/write their own consumer data
+    // match /users-consumer/{userId} {
+    //   allow read, write: if request.auth != null && request.auth.uid == userId;
+    // }
+    
+    // Allow admins to read all user data (for admin dashboard)
+    // match /users-admin/{userId} {
+    //   allow read: if request.auth != null && 
+    //     exists(/databases/$(database)/documents/users-admin/$(request.auth.uid)) &&
+    //     get(/databases/$(database)/documents/users-admin/$(request.auth.uid)).data.role == 'admin';
+    // }
+    
+    // match /users-consumer/{userId} {
+    //   allow read: if request.auth != null && 
+    //     exists(/databases/$(database)/documents/users-admin/$(request.auth.uid)) &&
+    //     get(/databases/$(database)/documents/users-admin/$(request.auth.uid)).data.role == 'admin';
+    // }
+    
+    // Allow admins to read user index for listing users
+    // match /users-index/{userId} {
+    //   allow read: if request.auth != null && 
+    //     exists(/databases/$(database)/documents/users-admin/$(request.auth.uid)) &&
+    //     get(/databases/$(database)/documents/users-admin/$(request.auth.uid)).data.role == 'admin';
+    // }
+    
+    // ===== DEVELOPMENT RULES (PERMISSIVE) =====
+    // Comment out the line below when switching to production rules above
+    
+    // Allow all operations for development/testing
     match /{document=**} {
-      allow read, write: if false;
+      allow read, write: if true;
     }
+    
+    // Explicitly allow access to user subcollections (books, etc.)
+    match /users/{userId}/{subcollection=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow access to admin user subcollections (books, etc.)
+    match /users-admin/{userId}/{subcollection=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Allow access to consumer user subcollections (books, etc.)
+    match /users-consumer/{userId}/{subcollection=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // ===== PRODUCTION DEFAULT (SECURE) =====
+    // Uncomment the line below when switching to production rules above
+    
+    // match /{document=**} {
+    //   allow read, write: if false;
+    // }
   }
 }
